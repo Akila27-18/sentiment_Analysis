@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Reviews</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Customer Sentiment Analysis</h1>
+
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv,.xlsx" required>
+        <br><br>
+        <button type="submit">Analyze Reviews</button>
+    </form>
+
+    <br>
+    <p>Upload a CSV or Excel file where the <b>first column contains reviews</b>.</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 Sentiment Dashboard</h1>
+
+    <p><b>Total Reviews:</b> {{ data.total }}</p>
+    <p>😊 Positive: {{ data.positive }} ({{ data.positive_percent }}%)</p>
+    <p>😐 Neutral: {{ data.neutral }} ({{ data.neutral_percent }}%)</p>
+    <p>😠 Negative: {{ data.negative }} ({{ data.negative_percent }}%)</p>
+
+    <canvas id="pieChart"></canvas>
+    <canvas id="barChart"></canvas>
+
+    <h2>📌 Business Insights</h2>
+    <ul>
+        {% if data.positive_percent > 60 %}
+            <li>Overall customer sentiment is positive ✅</li>
+        {% else %}
+            <li>Customer satisfaction needs improvement ⚠️</li>
+        {% endif %}
+
+        {% if data.negative_percent > 30 %}
+            <li>High negative feedback detected</li>
+        {% endif %}
+
+        {% if data.neutral_percent > 40 %}
+            <li>Many neutral reviews – encourage feedback</li>
+        {% endif %}
+    </ul>
+
+    <h2>🔑 Top Keywords</h2>
+    <ul>
+        {% for word, count in data.top_words %}
+            <li>{{ word }} — {{ count }}</li>
+        {% endfor %}
+    </ul>
+
+        <!-- <h2>☁️ Word Clouds</h2>
+        <h3>🔑 Top Keywords</h3> -->
+<ul>
+{% for word, count in data.top_words %}
+    <li>{{ word }} — {{ count }}</li>
+{% endfor %}
+</ul>
+
+<h3>🌟 Positive Reviews</h3>
+<div class="grid">
+{% for key, img in data.wordclouds.items() %}
+    <div class="card">
+        <h3>{{ key | capitalize }}</h3>
+        <img src="{{ img }}" class="responsive-img">
+    </div>
+{% endfor %}
+</div>
+
+
+    <br>
+    <a href="/download-pdf"><button>📄 Download PDF Report</button></a>
+    <br><br>
+    <a href="/">⬅ Upload Another File</a>
+</div>
+
+<script>
+const data = {
+    positive: {{ data.positive }},
+    negative: {{ data.negative }},
+    neutral: {{ data.neutral }}
+};
+
+new Chart(document.getElementById("pieChart"), {
+    type: "pie",
+    data: {
+        labels: ["Positive", "Negative", "Neutral"],
+        datasets: [{
+            data: [data.positive, data.negative, data.neutral]
+        }]
+    }
+});
+
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: ["Positive", "Negative", "Neutral"],
+        datasets: [{
+            data: [data.positive, data.negative, data.neutral]
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
