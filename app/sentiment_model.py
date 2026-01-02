@@ -1,4 +1,15 @@
+import os
+import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
+
+# ✅ Explicit NLTK data directory (CRITICAL for Render)
+NLTK_DATA_DIR = "/opt/render/nltk_data"
+os.makedirs(NLTK_DATA_DIR, exist_ok=True)
+
+nltk.data.path.append(NLTK_DATA_DIR)
+
+# ✅ Force download
+nltk.download("vader_lexicon", download_dir=NLTK_DATA_DIR)
 
 sia = SentimentIntensityAnalyzer()
 
@@ -11,7 +22,7 @@ def analyze_reviews(reviews):
     }
 
     for review in reviews:
-        if not review.strip():
+        if not review or not review.strip():
             continue
 
         score = sia.polarity_scores(review)["compound"]
